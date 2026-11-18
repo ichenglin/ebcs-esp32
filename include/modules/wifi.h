@@ -2,7 +2,6 @@
 #define WIFI_H
 
 bool wifi_init(void);
-bool wifi_promiscuous(void);
-void wifi_promiscuous_callback(void *buf, wifi_promiscuous_pkt_type_t type);
+bool wifi_promiscuous(wifi_promiscuous_cb_t callback);
 
 #endif // WIFI_H
