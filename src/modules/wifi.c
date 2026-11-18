@@ -9,6 +9,7 @@
 #include "packets/base.h"
 #include "packets/dot11.h"
 #include "packets/uplink.h"
+#include "modules/mac.h"
 #include "modules/parse.h"
 #include "modules/wifi.h"
 
@@ -46,6 +47,7 @@ void wifi_promiscuous_callback(void *buffer, wifi_promiscuous_pkt_type_t type) {
     // check dot11
     if (dot11_control_type   (dot11->frame_control) != DOT11_TYPE_MANAGEMENT) return;
     if (dot11_control_subtype(dot11->frame_control) != DOT11_SUBTYPE_ACTION)  return;
+    if (mac_bc(dot11->bssid)                        == false)                 return;
     // check action
     if (action->category != ACTION_CATEGORY_PUBLIC) return;
     if (base->action     != ACTION_VALUE_UPLINK)    return;
