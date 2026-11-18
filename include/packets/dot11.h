@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define DOT11_TYPE_MANAGEMENT 0
-#define DOT11_SUBTYPE_ACTION  13
+#define DOT11_TYPE_MANAGEMENT 0x0
+#define DOT11_SUBTYPE_ACTION  0xD
 
 typedef struct __attribute__((packed)) {
     uint16_t frame_control;
