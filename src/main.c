@@ -18,7 +18,7 @@ static const char *TAG = "MAIN";
 
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1000));
-    if (!wifi_init())        { ESP_LOGE(TAG, "Failed to initialize Wi-Fi");             return; }
+    if (!wifi_init(1))                { ESP_LOGE(TAG, "Failed to initialize Wi-Fi");             return; }
     if (!wifi_promiscuous(app_sniff)) { ESP_LOGE(TAG, "Failed to start Wi-Fi promiscuous mode"); return; }
     ESP_LOGI(TAG, "Wi-Fi promiscuous mode started successfully!");
 }
