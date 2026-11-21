@@ -2,14 +2,30 @@
 
 #include "packets/dot11.h"
 
-uint8_t dot11_get_protocol(uint16_t frame_control) {
-    return frame_control & 0x03;
+void dot11_init(dot11_t *dot11) {
+    *dot11 = (dot11_t){0};
 }
 
-uint8_t dot11_get_type(uint16_t frame_control) {
-    return (frame_control >> 2) & 0x03;
+uint8_t dot11_get_protocol(dot11_t *dot11) {
+    return dot11->frame_control & 0x03;
 }
 
-uint8_t dot11_get_subtype(uint16_t frame_control) {
-    return (frame_control >> 4) & 0x0F;
+uint8_t dot11_get_type(dot11_t *dot11) {
+    return (dot11->frame_control >> 2) & 0x03;
+}
+
+uint8_t dot11_get_subtype(dot11_t *dot11) {
+    return (dot11->frame_control >> 4) & 0x0F;
+}
+
+void dot11_set_protocol(dot11_t *dot11, uint8_t protocol) {
+    dot11->frame_control = (dot11->frame_control & ~(0x03)) | (protocol & 0x03);
+}
+
+void dot11_set_type(dot11_t *dot11, uint8_t type) {
+    dot11->frame_control = (dot11->frame_control & ~(0x03 << 2)) | ((type & 0x03) << 2);
+}
+
+void dot11_set_subtype(dot11_t *dot11, uint8_t subtype) {
+    dot11->frame_control = (dot11->frame_control & ~(0x0F << 4)) | ((subtype & 0x0F) << 4);
 }

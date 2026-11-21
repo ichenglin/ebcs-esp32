@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-#define DOT11_TYPE_MANAGEMENT 0x0
-#define DOT11_SUBTYPE_ACTION  0xD
-
 typedef struct __attribute__((packed)) {
     uint16_t frame_control;
     uint16_t duration;
@@ -15,9 +12,12 @@ typedef struct __attribute__((packed)) {
     uint16_t sequence_control;
 } dot11_t;
 
-// frame control fields
-uint8_t dot11_get_protocol(uint16_t frame_control);
-uint8_t dot11_get_type    (uint16_t frame_control);
-uint8_t dot11_get_subtype (uint16_t frame_control);
+void    dot11_init        (dot11_t *dot11);
+uint8_t dot11_get_protocol(dot11_t *dot11);
+uint8_t dot11_get_type    (dot11_t *dot11);
+uint8_t dot11_get_subtype (dot11_t *dot11);
+void    dot11_set_protocol(dot11_t *dot11, uint8_t protocol);
+void    dot11_set_type    (dot11_t *dot11, uint8_t type);
+void    dot11_set_subtype (dot11_t *dot11, uint8_t subtype);
 
 #endif // DOT11_H

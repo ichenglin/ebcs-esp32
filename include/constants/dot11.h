@@ -1,0 +1,8 @@
+#ifndef DOT11_CONST_H
+#define DOT11_CONST_H
+
+#define DOT11_PROTOCOL_80211  0x0
+#define DOT11_TYPE_MANAGEMENT 0x0
+#define DOT11_SUBTYPE_ACTION  0xD
+
+#endif // DOT11_CONST_H

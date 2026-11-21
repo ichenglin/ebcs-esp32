@@ -3,31 +3,39 @@
 
 #include "constants/action.h"
 #include "constants/base.h"
+#include "constants/dot11.h"
 #include "constants/uplink.h"
+#include "packets/dot11.h"
 #include "packets/uplink.h"
 
 bc_uplink_t *uplink_new() {
-    bc_uplink_t *uplink = (bc_uplink_t*) malloc(sizeof(bc_uplink_t));
-    if (uplink == NULL) return NULL;
-    // defaults
-    uplink->dot11                     = (dot11_t){0};
-    uplink->action.category           = ACTION_CATEGORY_PUBLIC;
-    uplink->base.action               = ACTION_VALUE_UPLINK;
-    uplink->flags.certificate_present = FIELD_ABSENT;
-    uplink->flags.tx_time_present     = FIELD_ABSENT;
-    uplink->flags.count_present       = FIELD_ABSENT;
-    uplink->flags.signature_type      = SIGNATURE_TYPE_HLSA;
-    uplink->uri                       = NULL;
-    uplink->uri_len                   = 0;
-    uplink->payload                   = NULL;
-    uplink->payload_len               = 0;
-    uplink->certificate               = NULL;
-    uplink->certificate_len           = 0;
-    uplink->frame_tx_time             = 0;
-    uplink->frame_count               = 0;
-    uplink->signature                 = NULL;
-    uplink->signature_len             = 0;
-    return uplink;
+    return (bc_uplink_t*) malloc(sizeof(bc_uplink_t));
+}
+
+void uplink_init(bc_uplink_t *uplink) {
+    // dot11
+    dot11_init        (&uplink->dot11);
+    dot11_set_protocol(&uplink->dot11, DOT11_PROTOCOL_80211);
+    dot11_set_type    (&uplink->dot11, DOT11_TYPE_MANAGEMENT);
+    dot11_set_subtype (&uplink->dot11, DOT11_SUBTYPE_ACTION);
+    // action and base
+    uplink->action.category = ACTION_CATEGORY_PUBLIC;
+    uplink->base.action     = ACTION_VALUE_UPLINK;
+    // uplink
+    uplink_set_certificate_present(uplink, FIELD_ABSENT);
+    uplink_set_tx_time_present    (uplink, FIELD_ABSENT);
+    uplink_set_count_present      (uplink, FIELD_ABSENT);
+    uplink_set_signature_type     (uplink, SIGNATURE_TYPE_HLSA);
+    uplink->uri             = NULL;
+    uplink->uri_len         = 0;
+    uplink->payload         = NULL;
+    uplink->payload_len     = 0;
+    uplink->certificate     = NULL;
+    uplink->certificate_len = 0;
+    uplink->frame_tx_time   = 0;
+    uplink->frame_count     = 0;
+    uplink->signature       = NULL;
+    uplink->signature_len   = 0;
 }
 
 void uplink_free(bc_uplink_t *uplink) {
@@ -37,6 +45,38 @@ void uplink_free(bc_uplink_t *uplink) {
     if (uplink->certificate) free((void*) uplink->certificate);
     if (uplink->signature)   free((void*) uplink->signature);
     free(uplink);
+}
+
+uint8_t uplink_get_certificate_present(bc_uplink_t *uplink) {
+    return (uplink->flags >> 7) & 0x01;
+}
+
+uint8_t uplink_get_tx_time_present(bc_uplink_t *uplink) {
+    return (uplink->flags >> 6) & 0x01;
+}
+
+uint8_t uplink_get_count_present(bc_uplink_t *uplink) {
+    return (uplink->flags >> 5) & 0x01;
+}
+
+uint8_t uplink_get_signature_type(bc_uplink_t *uplink) {
+    return (uplink->flags >> 2) & 0x07;
+}
+
+void uplink_set_certificate_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x80) | ((present & 0x01) << 7);
+}
+
+void uplink_set_tx_time_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x40) | ((present & 0x01) << 6);
+}
+
+void uplink_set_count_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x20) | ((present & 0x01) << 5);
+}
+
+void uplink_set_signature_type(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x1C) | ((present & 0x07) << 2);
 }
 
 bool uplink_set_uri(bc_uplink_t *uplink, const uint8_t *uri, uint8_t uri_len) {
@@ -53,25 +93,25 @@ bool uplink_set_payload(bc_uplink_t *uplink, const uint8_t *payload, uint16_t pa
 
 bool uplink_set_certificate(bc_uplink_t *uplink, const uint8_t *certificate, uint16_t certificate_len) {
     if (!_uplink_set_bytes(&uplink->certificate, certificate, certificate_len)) return false;
-    uplink->flags.certificate_present = FIELD_PRESENT;
-    uplink->certificate_len           = certificate_len;
+    uplink_set_certificate_present(uplink, FIELD_PRESENT);
+    uplink->certificate_len = certificate_len;
     return true;
 }
 
 bool uplink_set_signature(bc_uplink_t *uplink, const uint8_t *signature, uint16_t signature_len, uint8_t type) {
     if (!_uplink_set_bytes(&uplink->signature, signature, signature_len)) return false;
-    uplink->flags.signature_type = type;
-    uplink->signature_len        = signature_len;
+    uplink_set_signature_type(uplink, type);
+    uplink->signature_len = signature_len;
     return true;
 }
 
 void uplink_set_tx_time(bc_uplink_t *uplink, uint32_t tx_time) {
-    uplink->flags.tx_time_present = FIELD_PRESENT;
+    uplink_set_tx_time_present(uplink, FIELD_PRESENT);
     uplink->frame_tx_time         = tx_time;
 }
 
 void uplink_set_count(bc_uplink_t *uplink, uint64_t count) {
-    uplink->flags.count_present = FIELD_PRESENT;
+    uplink_set_count_present(uplink, FIELD_PRESENT);
     uplink->frame_count         = count;
 }
 
