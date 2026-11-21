@@ -1,3 +1,5 @@
+#ifdef APP_STATION
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_wifi.h"
@@ -14,7 +16,7 @@
 
 void app_sniff(void *buffer, wifi_promiscuous_pkt_type_t type);
 
-static const char *TAG = "MAIN";
+static const char *TAG = "STATION";
 
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1000));
@@ -45,3 +47,5 @@ void app_sniff(void *buffer, wifi_promiscuous_pkt_type_t type) {
     if (base->action     != ACTION_VALUE_UPLINK)    return;
     ESP_LOGI(TAG, "passed!");
 }
+
+#endif
