@@ -1,0 +1,86 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include "constants/action.h"
+#include "constants/base.h"
+#include "constants/uplink.h"
+#include "packets/uplink.h"
+
+bc_uplink_t *uplink_new() {
+    bc_uplink_t *uplink = (bc_uplink_t*) malloc(sizeof(bc_uplink_t));
+    if (uplink == NULL) return NULL;
+    // defaults
+    uplink->dot11                     = (dot11_t){0};
+    uplink->action.category           = ACTION_CATEGORY_PUBLIC;
+    uplink->base.action               = ACTION_VALUE_UPLINK;
+    uplink->flags.certificate_present = FIELD_ABSENT;
+    uplink->flags.tx_time_present     = FIELD_ABSENT;
+    uplink->flags.count_present       = FIELD_ABSENT;
+    uplink->flags.signature_type      = SIGNATURE_TYPE_HLSA;
+    uplink->uri                       = NULL;
+    uplink->uri_len                   = 0;
+    uplink->payload                   = NULL;
+    uplink->payload_len               = 0;
+    uplink->certificate               = NULL;
+    uplink->certificate_len           = 0;
+    uplink->frame_tx_time             = 0;
+    uplink->frame_count               = 0;
+    uplink->signature                 = NULL;
+    uplink->signature_len             = 0;
+    return uplink;
+}
+
+void uplink_free(bc_uplink_t *uplink) {
+    if (!uplink)             return;
+    if (uplink->uri)         free((void*) uplink->uri);
+    if (uplink->payload)     free((void*) uplink->payload);
+    if (uplink->certificate) free((void*) uplink->certificate);
+    if (uplink->signature)   free((void*) uplink->signature);
+    free(uplink);
+}
+
+bool uplink_set_uri(bc_uplink_t *uplink, const uint8_t *uri, uint8_t uri_len) {
+    if (!_uplink_set_bytes(&uplink->uri, uri, uri_len)) return false;
+    uplink->uri_len = uri_len;
+    return true;
+}
+
+bool uplink_set_payload(bc_uplink_t *uplink, const uint8_t *payload, uint16_t payload_len) {
+    if (!_uplink_set_bytes(&uplink->payload, payload, payload_len)) return false;
+    uplink->payload_len = payload_len;
+    return true;
+}
+
+bool uplink_set_certificate(bc_uplink_t *uplink, const uint8_t *certificate, uint16_t certificate_len) {
+    if (!_uplink_set_bytes(&uplink->certificate, certificate, certificate_len)) return false;
+    uplink->flags.certificate_present = FIELD_PRESENT;
+    uplink->certificate_len           = certificate_len;
+    return true;
+}
+
+bool uplink_set_signature(bc_uplink_t *uplink, const uint8_t *signature, uint16_t signature_len, uint8_t type) {
+    if (!_uplink_set_bytes(&uplink->signature, signature, signature_len)) return false;
+    uplink->flags.signature_type = type;
+    uplink->signature_len        = signature_len;
+    return true;
+}
+
+void uplink_set_tx_time(bc_uplink_t *uplink, uint32_t tx_time) {
+    uplink->flags.tx_time_present = FIELD_PRESENT;
+    uplink->frame_tx_time         = tx_time;
+}
+
+void uplink_set_count(bc_uplink_t *uplink, uint64_t count) {
+    uplink->flags.count_present = FIELD_PRESENT;
+    uplink->frame_count         = count;
+}
+
+bool _uplink_set_bytes(const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size) {
+    // cleanup
+    if (*pointer_old) free((void*) *pointer_old);
+    // replace
+    *pointer_old = (uint8_t*) malloc(pointer_new_size);
+    if (*pointer_old == NULL) return false;
+    memcpy((void*) *pointer_old, pointer_new, pointer_new_size);
+    return true;
+}

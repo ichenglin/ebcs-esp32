@@ -6,6 +6,8 @@
 #include "esp_event.h"
 #include "esp_log.h"
 
+#include "constants/action.h"
+#include "constants/base.h"
 #include "packets/action.h"
 #include "packets/base.h"
 #include "packets/dot11.h"
@@ -33,19 +35,18 @@ void app_sniff(void *buffer, wifi_promiscuous_pkt_type_t type) {
     const uint8_t                *frame  = packet->payload;
     size_t                        length = packet->rx_ctrl.sig_len;
     // extract headers
-    const dot11_t        *dot11  = parse_header(&frame, &length, sizeof(dot11_t));
-    const dot11_action_t *action = parse_header(&frame, &length, sizeof(dot11_action_t));
-    const bc_base_t      *base   = parse_header(&frame, &length, sizeof(bc_base_t));
-    const bc_uplink_t    *uplink = parse_header(&frame, &length, sizeof(bc_uplink_t));
-    if (!dot11 || !action || !base || !uplink) return;
+    const dot11_t     *dot11  = parse_header(&frame, &length, sizeof(dot11_t));
+    const action_t    *action = parse_header(&frame, &length, sizeof(action_t));
+    const bc_base_t   *base   = parse_header(&frame, &length, sizeof(bc_base_t));
+    if (!dot11 || !action || !base) return;
     // check dot11
-    if (dot11_control_type   (dot11->frame_control) != DOT11_TYPE_MANAGEMENT) return;
-    if (dot11_control_subtype(dot11->frame_control) != DOT11_SUBTYPE_ACTION)  return;
-    if (mac_bc               (dot11->bssid)         == false)                 return;
+    if (dot11_get_type   (dot11->frame_control) != DOT11_TYPE_MANAGEMENT) return;
+    if (dot11_get_subtype(dot11->frame_control) != DOT11_SUBTYPE_ACTION)  return;
+    if (mac_bc           (dot11->bssid)         == false)                 return;
     // check action
     if (action->category != ACTION_CATEGORY_PUBLIC) return;
     if (base->action     != ACTION_VALUE_UPLINK)    return;
-    ESP_LOGI(TAG, "passed!");
+    ESP_LOGI(TAG, "Received uplink frame!");
 }
 
 #endif

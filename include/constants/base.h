@@ -1,0 +1,8 @@
+#ifndef BASE_CONST_H
+#define BASE_CONST_H
+
+#define ACTION_VALUE_UPLINK      0x33
+#define ACTION_VALUE_INFO        0x34
+#define ACTION_VALUE_TERMINATION 0x35
+
+#endif // BASE_CONST_H

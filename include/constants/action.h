@@ -1,0 +1,6 @@
+#ifndef ACTION_CONST_H
+#define ACTION_CONST_H
+
+#define ACTION_CATEGORY_PUBLIC 0x4
+
+#endif // ACTION_CONST_H

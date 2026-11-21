@@ -16,8 +16,8 @@ typedef struct __attribute__((packed)) {
 } dot11_t;
 
 // frame control fields
-uint8_t dot11_control_protocol(uint16_t frame_control);
-uint8_t dot11_control_type    (uint16_t frame_control);
-uint8_t dot11_control_subtype (uint16_t frame_control);
+uint8_t dot11_get_protocol(uint16_t frame_control);
+uint8_t dot11_get_type    (uint16_t frame_control);
+uint8_t dot11_get_subtype (uint16_t frame_control);
 
 #endif // DOT11_H
