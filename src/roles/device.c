@@ -25,6 +25,7 @@ void app_main(void) {
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(2000));
         app_transmit();
+        ESP_LOGI(TAG, "Uplink packet transmitted");
     }
 }
 
@@ -36,7 +37,6 @@ void app_init(void) {
 void app_transmit(void) {
     // new uplink packet
     uint32_t now = (uint32_t) time(NULL);
-    ESP_LOGI  (TAG, "Wi-Fi transmit time: %u", now);
     bc_uplink_t uplink;
     uplink_init(&uplink);
     // dot11
