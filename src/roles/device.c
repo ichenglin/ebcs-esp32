@@ -1,5 +1,7 @@
 #ifdef APP_DEVICE
 
+#include <time.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
@@ -33,6 +35,8 @@ void app_init(void) {
 
 void app_transmit(void) {
     // new uplink packet
+    uint32_t now = (uint32_t) time(NULL);
+    ESP_LOGI  (TAG, "Wi-Fi transmit time: %u", now);
     bc_uplink_t uplink;
     uplink_init(&uplink);
     // dot11
@@ -46,6 +50,7 @@ void app_transmit(void) {
     static const uint8_t uri[]       = "localhost:1112";
     static const uint8_t payload[]   = "Hello World!";
     static const uint8_t signature[] = "";
+    uplink_set_tx_time  (&uplink, now);
     uplink_set_uri      (&uplink, uri,       (sizeof(uri)       - 1));
     uplink_set_payload  (&uplink, payload,   (sizeof(payload)   - 1));
     uplink_set_signature(&uplink, signature, (sizeof(signature) - 1), SIGNATURE_TYPE_HLSA);

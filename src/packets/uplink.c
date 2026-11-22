@@ -140,12 +140,12 @@ bool uplink_set_signature(bc_uplink_t *uplink, const uint8_t *signature, uint16_
 
 void uplink_set_tx_time(bc_uplink_t *uplink, uint32_t tx_time) {
     _uplink_set_tx_time_present(uplink, FIELD_PRESENT);
-    uplink->frame_tx_time         = tx_time;
+    uplink->frame_tx_time = tx_time;
 }
 
 void uplink_set_count(bc_uplink_t *uplink, uint64_t count) {
     _uplink_set_count_present(uplink, FIELD_PRESENT);
-    uplink->frame_count         = count;
+    uplink->frame_count = count;
 }
 
 void _uplink_set_certificate_present(bc_uplink_t *uplink, uint8_t present) {
