@@ -8,6 +8,7 @@
 
 #include "constants/action.h"
 #include "constants/base.h"
+#include "constants/dot11.h"
 #include "packets/action.h"
 #include "packets/base.h"
 #include "packets/dot11.h"
@@ -40,9 +41,9 @@ void app_sniff(void *buffer, wifi_promiscuous_pkt_type_t type) {
     const bc_base_t   *base   = parse_header(&frame, &length, sizeof(bc_base_t));
     if (!dot11 || !action || !base) return;
     // check dot11
-    if (dot11_get_type   (dot11->frame_control) != DOT11_TYPE_MANAGEMENT) return;
-    if (dot11_get_subtype(dot11->frame_control) != DOT11_SUBTYPE_ACTION)  return;
-    if (mac_bc           (dot11->bssid)         == false)                 return;
+    if (dot11_get_type   ((dot11_t*) dot11) != DOT11_TYPE_MANAGEMENT) return;
+    if (dot11_get_subtype((dot11_t*) dot11) != DOT11_SUBTYPE_ACTION)  return;
+    if (mac_bc           (dot11->bssid)     == false)                 return;
     // check action
     if (action->category != ACTION_CATEGORY_PUBLIC) return;
     if (base->action     != ACTION_VALUE_UPLINK)    return;
