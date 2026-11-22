@@ -2,6 +2,7 @@
 
 #include <time.h>
 
+#include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
@@ -10,6 +11,7 @@
 #include "constants/base.h"
 #include "constants/mac.h"
 #include "constants/uplink.h"
+#include "modules/gpio.h"
 #include "modules/macro.h"
 #include "modules/wifi.h"
 #include "packets/uplink.h"
@@ -17,21 +19,27 @@
 static const char *TAG = "DEVICE";
 
 void app_init    (void);
+void app_event   (gpio_num_t pin, gpio_level_t level);
 void app_transmit(void);
 
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1000));
     app_init();
-    while (1) {
-        vTaskDelay(pdMS_TO_TICKS(2000));
-        app_transmit();
-        ESP_LOGI(TAG, "Uplink packet transmitted");
-    }
+    gpio_init(GPIO_NUM_0);
+    gpio_event(GPIO_NUM_0);
+    gpio_listener(app_event);
 }
 
 void app_init(void) {
-    if (!wifi_init(1)) LOG_RETURN(TAG, "Failed to initialize Wi-Fi");
-    else               ESP_LOGI  (TAG, "Wi-Fi initialized");
+    if (!wifi_init(1)) LOG_RETURN(TAG, "Failed to Initialize Wi-Fi");
+    else               ESP_LOGI  (TAG, "Wi-Fi Initialized");
+}
+
+void app_event(gpio_num_t pin, gpio_level_t level) {
+    if (pin   != GPIO_NUM_0)     return;
+    if (level != GPIO_EVENT_LOW) return;
+    ESP_LOGI(TAG, "Transmitting Uplink Packet...");
+    app_transmit();
 }
 
 void app_transmit(void) {
