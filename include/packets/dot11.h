@@ -1,5 +1,5 @@
-#ifndef DOT11_H
-#define DOT11_H
+#ifndef DOT11_PACKET_H
+#define DOT11_PACKET_H
 
 #include <stdint.h>
 
@@ -23,4 +23,4 @@ void    dot11_set_destination(dot11_t *dot11, const uint8_t *mac);
 void    dot11_set_source     (dot11_t *dot11, const uint8_t *mac);
 void    dot11_set_bssid      (dot11_t *dot11, const uint8_t *mac);
 
-#endif // DOT11_H
+#endif // DOT11_PACKET_H

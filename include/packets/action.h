@@ -1,5 +1,5 @@
-#ifndef ACTION_H
-#define ACTION_H
+#ifndef ACTION_PACKET_H
+#define ACTION_PACKET_H
 
 #include <stdint.h>
 
@@ -9,4 +9,4 @@ typedef struct __attribute__((packed)) {
 
 void action_set_category(action_t *action, uint8_t category);
 
-#endif // ACTION_H
+#endif // ACTION_PACKET_H

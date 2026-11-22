@@ -1,5 +1,5 @@
-#ifndef UPLINK_H
-#define UPLINK_H
+#ifndef UPLINK_PACKET_H
+#define UPLINK_PACKET_H
 
 #include <stdint.h>
 
@@ -39,4 +39,4 @@ bool         uplink_set_signature          (bc_uplink_t *uplink, const uint8_t *
 void         uplink_set_tx_time            (bc_uplink_t *uplink, uint32_t tx_time);
 void         uplink_set_count              (bc_uplink_t *uplink, uint64_t count);
 
-#endif // UPLINK_H
+#endif // UPLINK_PACKET_H

@@ -1,5 +1,5 @@
-#ifndef BASE_H
-#define BASE_H
+#ifndef BASE_PACKET_H
+#define BASE_PACKET_H
 
 #include <stdint.h>
 
@@ -9,4 +9,4 @@ typedef struct __attribute__((packed)) {
 
 void base_set_action(bc_base_t *base, uint8_t action);
 
-#endif // BASE_H
+#endif // BASE_PACKET_H
