@@ -20,7 +20,10 @@ void app_transmit(void);
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1000));
     app_init();
-    app_transmit();
+    while (1) {
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        app_transmit();
+    }
 }
 
 void app_init(void) {
@@ -30,25 +33,27 @@ void app_init(void) {
 
 void app_transmit(void) {
     // new uplink packet
-    bc_uplink_t *uplink = uplink_new();
-    if (!uplink) LOG_RETURN(TAG, "Failed to allocate uplink packet");
-    uplink_init(uplink);
+    bc_uplink_t uplink;
+    uplink_init(&uplink);
     // dot11
-    wifi_mac             (uplink->dot11.source);
-    dot11_set_destination(&uplink->dot11, MAC_BROADCAST);
-    dot11_set_bssid      (&uplink->dot11, MAC_EBCS(0x01, 0x02, 0x03));
+    wifi_mac             (uplink.dot11.source);
+    dot11_set_destination(&uplink.dot11, MAC_BROADCAST);
+    dot11_set_bssid      (&uplink.dot11, MAC_EBCS(0x01, 0x02, 0x03));
     // action and base
-    action_set_category(&uplink->action, ACTION_CATEGORY_PUBLIC);
-    base_set_action    (&uplink->base,   ACTION_VALUE_UPLINK);
+    action_set_category(&uplink.action, ACTION_CATEGORY_PUBLIC);
+    base_set_action    (&uplink.base,   ACTION_VALUE_UPLINK);
     // uplink fields
     static const uint8_t uri[]       = "localhost:1112";
     static const uint8_t payload[]   = "Hello World!";
-    static const uint8_t signature[] = "Signature";
-    uplink_set_uri      (uplink, uri,       (sizeof(uri)       - 1));
-    uplink_set_payload  (uplink, payload,   (sizeof(payload)   - 1));
-    uplink_set_signature(uplink, signature, (sizeof(signature) - 1), SIGNATURE_TYPE_ECDSA_P256);
-    // cleanup
-    uplink_free(uplink);
+    static const uint8_t signature[] = "";
+    uplink_set_uri      (&uplink, uri,       (sizeof(uri)       - 1));
+    uplink_set_payload  (&uplink, payload,   (sizeof(payload)   - 1));
+    uplink_set_signature(&uplink, signature, (sizeof(signature) - 1), SIGNATURE_TYPE_HLSA);
+    // transmit uplink packet
+    uint8_t *bytes;
+    size_t   size;
+    uplink_bytes(&uplink, &bytes, &size);
+    esp_wifi_80211_tx(WIFI_IF_STA, bytes, size, true);
 }
 
 #endif
