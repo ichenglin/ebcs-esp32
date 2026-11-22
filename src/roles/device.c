@@ -4,6 +4,8 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 
+#include "constants/action.h"
+#include "constants/base.h"
 #include "constants/mac.h"
 #include "constants/uplink.h"
 #include "modules/macro.h"
@@ -36,6 +38,8 @@ void app_transmit(void) {
     dot11_set_destination(&uplink->dot11, MAC_BROADCAST);
     dot11_set_bssid      (&uplink->dot11, MAC_EBCS(0x01, 0x02, 0x03));
     // action and base
+    action_set_category(&uplink->action, ACTION_CATEGORY_PUBLIC);
+    base_set_action    (&uplink->base,   ACTION_VALUE_UPLINK);
     // uplink fields
     static const uint8_t uri[]       = "localhost:1112";
     static const uint8_t payload[]   = "Hello World!";

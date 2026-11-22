@@ -8,7 +8,11 @@
 #include "packets/dot11.h"
 #include "packets/uplink.h"
 
-bool _uplink_set_bytes(const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size);
+void _uplink_set_certificate_present(bc_uplink_t    *uplink,      uint8_t        present);
+void _uplink_set_tx_time_present    (bc_uplink_t    *uplink,      uint8_t        present);
+void _uplink_set_count_present      (bc_uplink_t    *uplink,      uint8_t        present);
+void _uplink_set_signature_type     (bc_uplink_t    *uplink,      uint8_t        present);
+bool _uplink_set_bytes              (const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size);
 
 bc_uplink_t *uplink_new() {
     return (bc_uplink_t*) malloc(sizeof(bc_uplink_t));
@@ -35,10 +39,10 @@ void uplink_init(bc_uplink_t *uplink) {
     uplink->frame_count     = 0;
     uplink->signature       = NULL;
     uplink->signature_len   = 0;
-    uplink_set_certificate_present(uplink, FIELD_ABSENT);
-    uplink_set_tx_time_present    (uplink, FIELD_ABSENT);
-    uplink_set_count_present      (uplink, FIELD_ABSENT);
-    uplink_set_signature_type     (uplink, SIGNATURE_TYPE_HLSA);
+    _uplink_set_certificate_present(uplink, FIELD_ABSENT);
+    _uplink_set_tx_time_present    (uplink, FIELD_ABSENT);
+    _uplink_set_count_present      (uplink, FIELD_ABSENT);
+    _uplink_set_signature_type     (uplink, SIGNATURE_TYPE_HLSA);
 }
 
 void uplink_free(bc_uplink_t *uplink) {
@@ -66,22 +70,6 @@ uint8_t uplink_get_signature_type(bc_uplink_t *uplink) {
     return (uplink->flags >> 2) & 0x07;
 }
 
-void uplink_set_certificate_present(bc_uplink_t *uplink, uint8_t present) {
-    uplink->flags = (uplink->flags & ~0x80) | ((present & 0x01) << 7);
-}
-
-void uplink_set_tx_time_present(bc_uplink_t *uplink, uint8_t present) {
-    uplink->flags = (uplink->flags & ~0x40) | ((present & 0x01) << 6);
-}
-
-void uplink_set_count_present(bc_uplink_t *uplink, uint8_t present) {
-    uplink->flags = (uplink->flags & ~0x20) | ((present & 0x01) << 5);
-}
-
-void uplink_set_signature_type(bc_uplink_t *uplink, uint8_t present) {
-    uplink->flags = (uplink->flags & ~0x1C) | ((present & 0x07) << 2);
-}
-
 bool uplink_set_uri(bc_uplink_t *uplink, const uint8_t *uri, uint8_t uri_len) {
     if (!_uplink_set_bytes(&uplink->uri, uri, uri_len)) return false;
     uplink->uri_len = uri_len;
@@ -96,26 +84,42 @@ bool uplink_set_payload(bc_uplink_t *uplink, const uint8_t *payload, uint16_t pa
 
 bool uplink_set_certificate(bc_uplink_t *uplink, const uint8_t *certificate, uint16_t certificate_len) {
     if (!_uplink_set_bytes(&uplink->certificate, certificate, certificate_len)) return false;
-    uplink_set_certificate_present(uplink, FIELD_PRESENT);
+    _uplink_set_certificate_present(uplink, FIELD_PRESENT);
     uplink->certificate_len = certificate_len;
     return true;
 }
 
 bool uplink_set_signature(bc_uplink_t *uplink, const uint8_t *signature, uint16_t signature_len, uint8_t type) {
     if (!_uplink_set_bytes(&uplink->signature, signature, signature_len)) return false;
-    uplink_set_signature_type(uplink, type);
+    _uplink_set_signature_type(uplink, type);
     uplink->signature_len = signature_len;
     return true;
 }
 
 void uplink_set_tx_time(bc_uplink_t *uplink, uint32_t tx_time) {
-    uplink_set_tx_time_present(uplink, FIELD_PRESENT);
+    _uplink_set_tx_time_present(uplink, FIELD_PRESENT);
     uplink->frame_tx_time         = tx_time;
 }
 
 void uplink_set_count(bc_uplink_t *uplink, uint64_t count) {
-    uplink_set_count_present(uplink, FIELD_PRESENT);
+    _uplink_set_count_present(uplink, FIELD_PRESENT);
     uplink->frame_count         = count;
+}
+
+void _uplink_set_certificate_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x80) | ((present & 0x01) << 7);
+}
+
+void _uplink_set_tx_time_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x40) | ((present & 0x01) << 6);
+}
+
+void _uplink_set_count_present(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x20) | ((present & 0x01) << 5);
+}
+
+void _uplink_set_signature_type(bc_uplink_t *uplink, uint8_t present) {
+    uplink->flags = (uplink->flags & ~0x1C) | ((present & 0x07) << 2);
 }
 
 bool _uplink_set_bytes(const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size) {
