@@ -5,6 +5,6 @@
 
 bool wifi_init       (uint8_t               channel);
 bool wifi_promiscuous(wifi_promiscuous_cb_t callback);
-bool wifi_mac        (const uint8_t        *mac);
+bool wifi_mac        (uint8_t              *mac);
 
 #endif // WIFI_H

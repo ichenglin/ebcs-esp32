@@ -25,7 +25,7 @@ bool wifi_promiscuous(wifi_promiscuous_cb_t callback) {
     return true;
 }
 
-bool wifi_mac(const uint8_t *mac) {
-    if (esp_wifi_set_mac(WIFI_IF_STA, mac) != ESP_OK) return false;
+bool wifi_mac(uint8_t *mac) {
+    if (esp_wifi_get_mac(WIFI_IF_STA, mac) != ESP_OK) return false;
     return true;
 }

@@ -8,6 +8,8 @@
 #include "packets/dot11.h"
 #include "packets/uplink.h"
 
+bool _uplink_set_bytes(const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size);
+
 bc_uplink_t *uplink_new() {
     return (bc_uplink_t*) malloc(sizeof(bc_uplink_t));
 }
@@ -22,10 +24,7 @@ void uplink_init(bc_uplink_t *uplink) {
     uplink->action.category = ACTION_CATEGORY_PUBLIC;
     uplink->base.action     = ACTION_VALUE_UPLINK;
     // uplink
-    uplink_set_certificate_present(uplink, FIELD_ABSENT);
-    uplink_set_tx_time_present    (uplink, FIELD_ABSENT);
-    uplink_set_count_present      (uplink, FIELD_ABSENT);
-    uplink_set_signature_type     (uplink, SIGNATURE_TYPE_HLSA);
+    uplink->flags           = 0;
     uplink->uri             = NULL;
     uplink->uri_len         = 0;
     uplink->payload         = NULL;
@@ -36,6 +35,10 @@ void uplink_init(bc_uplink_t *uplink) {
     uplink->frame_count     = 0;
     uplink->signature       = NULL;
     uplink->signature_len   = 0;
+    uplink_set_certificate_present(uplink, FIELD_ABSENT);
+    uplink_set_tx_time_present    (uplink, FIELD_ABSENT);
+    uplink_set_count_present      (uplink, FIELD_ABSENT);
+    uplink_set_signature_type     (uplink, SIGNATURE_TYPE_HLSA);
 }
 
 void uplink_free(bc_uplink_t *uplink) {

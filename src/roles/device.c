@@ -4,6 +4,8 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 
+#include "constants/mac.h"
+#include "constants/uplink.h"
 #include "modules/macro.h"
 #include "modules/wifi.h"
 #include "packets/uplink.h"
@@ -29,6 +31,18 @@ void app_transmit(void) {
     bc_uplink_t *uplink = uplink_new();
     if (!uplink) LOG_RETURN(TAG, "Failed to allocate uplink packet");
     uplink_init(uplink);
+    // dot11
+    wifi_mac             (uplink->dot11.source);
+    dot11_set_destination(&uplink->dot11, MAC_BROADCAST);
+    dot11_set_bssid      (&uplink->dot11, MAC_EBCS(0x01, 0x02, 0x03));
+    // action and base
+    // uplink fields
+    static const uint8_t uri[]       = "localhost:1112";
+    static const uint8_t payload[]   = "Hello World!";
+    static const uint8_t signature[] = "Signature";
+    uplink_set_uri      (uplink, uri,       (sizeof(uri)       - 1));
+    uplink_set_payload  (uplink, payload,   (sizeof(payload)   - 1));
+    uplink_set_signature(uplink, signature, (sizeof(signature) - 1), SIGNATURE_TYPE_ECDSA_P256);
     // cleanup
     uplink_free(uplink);
 }

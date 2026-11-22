@@ -43,6 +43,5 @@ bool         uplink_set_certificate        (bc_uplink_t *uplink, const uint8_t *
 bool         uplink_set_signature          (bc_uplink_t *uplink, const uint8_t *signature,   uint16_t signature_len, uint8_t type);
 void         uplink_set_tx_time            (bc_uplink_t *uplink, uint32_t tx_time);
 void         uplink_set_count              (bc_uplink_t *uplink, uint64_t count);
-bool         _uplink_set_bytes             (const uint8_t **pointer_old, const uint8_t *pointer_new, size_t pointer_new_size);
 
 #endif // UPLINK_H
