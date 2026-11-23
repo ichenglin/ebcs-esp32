@@ -28,6 +28,7 @@ typedef struct {
 
 void         uplink_init                   (bc_uplink_t *uplink);
 void         uplink_bytes                  (bc_uplink_t *uplink, uint8_t **bytes, size_t *size);
+void         uplink_free                   (uint8_t    **bytes);
 uint8_t      uplink_get_certificate_present(bc_uplink_t *uplink);
 uint8_t      uplink_get_tx_time_present    (bc_uplink_t *uplink);
 uint8_t      uplink_get_count_present      (bc_uplink_t *uplink);

@@ -67,6 +67,7 @@ void app_transmit(void) {
     size_t   size;
     uplink_bytes(&uplink, &bytes, &size);
     esp_wifi_80211_tx(WIFI_IF_STA, bytes, size, true);
+    uplink_free(&bytes);
 }
 
 #endif

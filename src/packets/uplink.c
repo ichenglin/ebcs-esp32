@@ -96,6 +96,11 @@ void uplink_bytes(bc_uplink_t *uplink, uint8_t **bytes, size_t *size) {
     *size  = length;
 }
 
+void uplink_free(uint8_t **bytes) {
+    if (*bytes) free(*bytes);
+    *bytes = NULL;
+}
+
 uint8_t uplink_get_certificate_present(bc_uplink_t *uplink) {
     return (uplink->flags >> 7) & 0x01;
 }
