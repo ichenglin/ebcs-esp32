@@ -4,7 +4,39 @@ A more comprehensive Python-based implementation of IEEE 802.11bc, covering the 
 
 See [IEEE 802.11bc Python Implementation](https://github.com/ichenglin/80211bc-ebcs).
 
+## Prerequisites
+
+- ESP32 board with Wi-Fi capability
+- [ESP-IDF and Tools](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#installation)
+- [ESP-IDF Extension for VSCode](https://docs.espressif.com/projects/vscode-esp-idf-extension/en/latest/index.html) (Optional)
+
+> [!NOTE]
+> This project was developed and tested with **ESP-IDF v6.1.1**.
+> Using this version is recommended to ensure compatibility.
+
+## Setup Environment
+
+Configure the target device and flashing settings. For example:
+
+- Device Target: `esp32c5`
+- Serial Port: `/dev/ttyUSB0`
+- Flash Method: `UART`
+
+Next, open the SDK Configuration Editor (menuconfig) and configure the following parameters.
+The values shown are for reference and should be adjusted as needed:
+
+- Board Role: `Device`
+- Board Wi-Fi Channel: `1`
+- Device Button GPIO: `0`
+
+Once the configuration is complete, the project is ready to be built and flashed onto the device.
+
 ## Tested Boards
+
+The implementation is expected to work on all ESP32 SoCs equipped with Wi-Fi connectivity.
+ESP32-H and ESP32-P series are excluded, as they do not include Wi-Fi support.
+
+The following table lists the boards tested so far:
 
 | SoC      | Module           | Board                               | Wi-Fi       | Status |
 |----------|------------------|-------------------------------------|-------------|--------|
