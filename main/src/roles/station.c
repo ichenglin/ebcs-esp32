@@ -15,13 +15,14 @@
 #include "modules/parse.h"
 #include "modules/wifi.h"
 
+#define STATION_CHANNEL ((uint8_t) CONFIG_BOARD_CHANNEL)
+
 void app_sniff(void *buffer, wifi_promiscuous_pkt_type_t type);
 
 static const char *TAG = "STATION";
 
 void app_main(void) {
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    if (!wifi_init(1))                { ESP_LOGE(TAG, "Failed to initialize Wi-Fi");             return; }
+    if (!wifi_init(STATION_CHANNEL))  { ESP_LOGE(TAG, "Failed to initialize Wi-Fi");             return; }
     if (!wifi_promiscuous(app_sniff)) { ESP_LOGE(TAG, "Failed to start Wi-Fi promiscuous mode"); return; }
     ESP_LOGI(TAG, "Wi-Fi promiscuous mode started successfully!");
 }

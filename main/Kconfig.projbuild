@@ -1,4 +1,4 @@
-menu "Board role"
+menu "Board config"
     choice BOARD_ROLE
         prompt "Board role"
         default BOARD_ROLE_DEVICE
@@ -12,9 +12,14 @@ menu "Board role"
         config BOARD_ROLE_SANDBOX
             bool "Sandbox"
     endchoice
+
+    config BOARD_CHANNEL
+        int "Board Wi-Fi channel (2.4GHz or 5GHz)"
+        range 1 196
+        default 1
 endmenu
 
-menu "Device configuration"
+menu "Device config"
     config DEVICE_GPIO_BUTTON
         int "Device button GPIO"
         default 28 if IDF_TARGET_ESP32C5

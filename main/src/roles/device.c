@@ -15,6 +15,7 @@
 #include "packets/uplink.h"
 
 #define DEVICE_GPIO_BUTTON ((gpio_num_t) CONFIG_DEVICE_GPIO_BUTTON)
+#define DEVICE_CHANNEL     ((uint8_t)    CONFIG_BOARD_CHANNEL)
 
 static const char *TAG = "DEVICE";
 
@@ -23,7 +24,6 @@ void app_event   (gpio_num_t pin, gpio_level_t level);
 void app_transmit(void);
 
 void app_main(void) {
-    vTaskDelay(pdMS_TO_TICKS(1000));
     app_init();
     gpio_init (DEVICE_GPIO_BUTTON);
     gpio_event(DEVICE_GPIO_BUTTON);
@@ -31,8 +31,8 @@ void app_main(void) {
 }
 
 void app_init(void) {
-    if (!wifi_init(1)) LOG_RETURN(TAG, "Failed to Initialize Wi-Fi");
-    else               ESP_LOGI  (TAG, "Wi-Fi Initialized");
+    if (!wifi_init(DEVICE_CHANNEL)) LOG_RETURN(TAG, "Failed to Initialize Wi-Fi");
+    else                            ESP_LOGI  (TAG, "Wi-Fi Initialized");
 }
 
 void app_event(gpio_num_t pin, gpio_level_t level) {
