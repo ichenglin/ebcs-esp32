@@ -6,7 +6,7 @@ See [IEEE 802.11bc Python Implementation](https://github.com/ichenglin/80211bc-e
 
 ## Prerequisites
 
-- ESP32 board with Wi-Fi capability
+- ESP32 board with [Wi-Fi capability](#tested-boards) and USB cable
 - [ESP-IDF and Tools](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#installation)
 - [ESP-IDF Extension for VSCode](https://docs.espressif.com/projects/vscode-esp-idf-extension/en/latest/index.html) (Optional)
 
@@ -27,7 +27,7 @@ The values shown are for reference and should be adjusted as needed:
 
 - Board Role: `Device`
 - Board Wi-Fi Channel: `1`
-- Device Button GPIO: `0`
+- Device Button GPIO: `0` *(Device Only)*
 
 Once the configuration is complete, the project is ready to be built and flashed onto the device.
 
