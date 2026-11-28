@@ -14,6 +14,8 @@
 #include "modules/wifi.h"
 #include "packets/uplink.h"
 
+#define DEVICE_GPIO_BUTTON ((gpio_num_t) CONFIG_DEVICE_GPIO_BUTTON)
+
 static const char *TAG = "DEVICE";
 
 void app_init    (void);
@@ -23,8 +25,8 @@ void app_transmit(void);
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1000));
     app_init();
-    gpio_init(GPIO_NUM_0);
-    gpio_event(GPIO_NUM_0);
+    gpio_init (DEVICE_GPIO_BUTTON);
+    gpio_event(DEVICE_GPIO_BUTTON);
     gpio_listener(app_event);
 }
 
@@ -34,8 +36,8 @@ void app_init(void) {
 }
 
 void app_event(gpio_num_t pin, gpio_level_t level) {
-    if (pin   != GPIO_NUM_0)     return;
-    if (level != GPIO_EVENT_LOW) return;
+    if (pin   != DEVICE_GPIO_BUTTON) return;
+    if (level != GPIO_EVENT_LOW)     return;
     ESP_LOGI(TAG, "Transmitting Uplink Packet...");
     app_transmit();
 }

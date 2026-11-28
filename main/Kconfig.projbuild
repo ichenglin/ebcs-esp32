@@ -13,3 +13,10 @@ menu "Board role"
             bool "Sandbox"
     endchoice
 endmenu
+
+menu "Device configuration"
+    config DEVICE_GPIO_BUTTON
+        int "Device button GPIO"
+        default 28 if IDF_TARGET_ESP32C5
+        default 0
+endmenu
