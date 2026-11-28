@@ -1,0 +1,15 @@
+menu "Board role"
+    choice BOARD_ROLE
+        prompt "Board role"
+        default BOARD_ROLE_DEVICE
+
+        config BOARD_ROLE_DEVICE
+            bool "Device"
+
+        config BOARD_ROLE_STATION
+            bool "Station"
+
+        config BOARD_ROLE_SANDBOX
+            bool "Sandbox"
+    endchoice
+endmenu
