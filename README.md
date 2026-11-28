@@ -1,3 +1,9 @@
+## Related Project
+
+A more comprehensive Python-based implementation of IEEE 802.11bc, covering the complete end-to-end communication workflow, is available in a separate repository.
+
+See [IEEE 802.11bc Python Implementation](https://github.com/ichenglin/80211bc-ebcs).
+
 ## Tested Boards
 
 | SoC      | Module           | Board                               | Wi-Fi       | Status |
