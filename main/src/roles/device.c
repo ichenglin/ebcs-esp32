@@ -1,5 +1,3 @@
-#ifdef APP_DEVICE
-
 #include <time.h>
 
 #include "driver/gpio.h"
@@ -69,5 +67,3 @@ void app_transmit(void) {
     esp_wifi_80211_tx(WIFI_IF_STA, bytes, size, true);
     uplink_free(&bytes);
 }
-
-#endif

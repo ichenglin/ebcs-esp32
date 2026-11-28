@@ -1,3 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0)
+cmake_minimum_required(VERSION 3.22)
+
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(ebcs-esp32)
+project(80211bc-ebcs)
